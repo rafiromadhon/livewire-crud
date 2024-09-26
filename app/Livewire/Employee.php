@@ -15,16 +15,18 @@ class Employee extends Component
     public $email;
     public $alamat;
     public $employee_id;
+    public $katakunci;
     public $updateData = false;
 
-    public function store(){
+    public function store()
+    {
         $rules = [
-            "nama"=> "required",
-            "email"=> "required|email",
-            "alamat"=> "required",
+            "nama" => "required",
+            "email" => "required|email",
+            "alamat" => "required",
         ];
 
-        $pesan =[
+        $pesan = [
             'nama.required' => 'Nama wajib diisi',
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Format Email tidak sesuai',
@@ -33,11 +35,12 @@ class Employee extends Component
 
         $validated = $this->validate($rules, $pesan);
         ModelsEmployee::create($validated);
-        session()->flash('message','Data berhasil dimasukkan');
+        session()->flash('message', 'Data berhasil dimasukkan');
         $this->clear();
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $data = ModelsEmployee::find($id);
         $this->nama = $data->nama;
         $this->email = $data->email;
@@ -47,14 +50,15 @@ class Employee extends Component
         $this->employee_id = $id;
     }
 
-    public function update(){
+    public function update()
+    {
         $rules = [
-            "nama"=> "required",
-            "email"=> "required|email",
-            "alamat"=> "required",
+            "nama" => "required",
+            "email" => "required|email",
+            "alamat" => "required",
         ];
 
-        $pesan =[
+        $pesan = [
             'nama.required' => 'Nama wajib diisi',
             'email.required' => 'Email wajib diisi',
             'email.email' => 'Format Email tidak sesuai',
@@ -64,11 +68,12 @@ class Employee extends Component
         $validated = $this->validate($rules, $pesan);
         $data = ModelsEmployee::find($this->employee_id);
         $data->update($validated);
-        session()->flash('message','Data berhasil di-update');
+        session()->flash('message', 'Data berhasil di-update');
         $this->clear();
     }
 
-    public function clear(){
+    public function clear()
+    {
         $this->nama = '';
         $this->email = '';
         $this->alamat = '';
@@ -77,19 +82,28 @@ class Employee extends Component
         $this->employee_id = '';
     }
 
-    public function delete(){
+    public function delete()
+    {
         ModelsEmployee::find($this->employee_id)->delete();
-        session()->flash('message','Data berhasil dihapus');
+        session()->flash('message', 'Data berhasil dihapus');
         $this->clear();
     }
 
-    public function deleteConfirmation($id){
+    public function deleteConfirmation($id)
+    {
         $this->employee_id = $id;
     }
 
     public function render()
-    {   
-        $data = ModelsEmployee::orderBy('nama', 'asc')->paginate(2);
-        return view('livewire.employee', ['dataEmployees'=> $data]);
+    {
+        if ($this->katakunci != null) {
+            $data = ModelsEmployee::where('nama', 'like', '%' . $this->katakunci . '%')
+                ->orWhere('email', 'like', '%' . $this->katakunci . '%')
+                ->orWhere('alamat', 'like', '%' . $this->katakunci . '%')
+                ->orderBy('nama', 'asc')->paginate(2);
+        } else {
+            $data = ModelsEmployee::orderBy('nama', 'asc')->paginate(2);
+        }
+        return view('livewire.employee', ['dataEmployees' => $data]);
     }
 }
