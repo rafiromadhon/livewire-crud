@@ -77,6 +77,15 @@ class Employee extends Component
         $this->employee_id = '';
     }
 
+    public function delete(){
+        ModelsEmployee::find($this->employee_id)->delete();
+        session()->flash('message','Data berhasil dihapus');
+        $this->clear();
+    }
+
+    public function deleteConfirmation($id){
+        $this->employee_id = $id;
+    }
 
     public function render()
     {   
