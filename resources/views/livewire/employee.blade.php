@@ -58,12 +58,19 @@
     <!-- START DATA -->
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h1>Data Pegawai</h1>
+        
         <div class="pb-3 pt-3">
             <input type="text" class="form-control mb-3 w-25" placeholder="Cari . . ." wire:model.live="katakunci">
         </div>
+        
+        @if ($employee_selected_id)
+        <a wire:click="deleteConfirmation('')" class="btn btn-danger btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Hapus ({{ count($employee_selected_id) }})</a>
+        @endif
+        
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th></th>
                     <th class="col-md-1">No</th>
                     <th class="col-md-4">Nama</th>
                     <th class="col-md-3">Email</th>
@@ -73,8 +80,8 @@
             </thead>
             <tbody>
                 @foreach ($dataEmployees as $key => $value)
-                
                 <tr>
+                    <td><input type="checkbox" wire:key='{{ $value->id }}' value="{{ $value->id }}" wire:model.live="employee_selected_id"></td>
                     <td>
                         {{ $dataEmployees->firstItem() + $key }}
                     </td>
@@ -89,7 +96,7 @@
                     </td>
                     <td>
                         <a wire:click="edit({{ $value->id }})" class="btn btn-warning btn-sm">Edit</a>
-                        <a wire:click="deleteConfirmation({{ $value->id }})" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Del</a>
+                        <a wire:click="deleteConfirmation({{ $value->id }})" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Hapus</a>
                     </td>
                 </tr>
                 @endforeach
