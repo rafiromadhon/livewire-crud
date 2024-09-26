@@ -10,7 +10,7 @@
         </div>
     </div>
     @endif
-
+    
     @if (session()->has('message'))
     <div class="pt-3">
         <div class="alert alert-success">
@@ -18,7 +18,7 @@
         </div>
     </div>
     @endif
-
+    
     <!-- START FORM -->
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <form>
@@ -42,18 +42,22 @@
             </div>
             <div class="mb-3 row">
                 <label class="col-sm-2 col-form-label"></label>
-                <div class="col-sm-10"><button type="button" class="btn btn-primary" name="submit"
-                        wire:click="store()">SIMPAN</button>
+                <div class="col-sm-10">
+                    @if ($updateData == false)
+                    <button type="button" class="btn btn-primary" name="submit" wire:click="store()">Simpan</button>
+                    @else
+                    <button type="button" class="btn btn-primary" name="submit" wire:click="update()">Update</button>
+                    @endif
+                    <button type="button" class="btn btn-secondary" name="submit" wire:click="clear()">Bersihkan</button>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
     <!-- AKHIR FORM -->
-
+    
     <!-- START DATA -->
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h1>Data Pegawai</h1>
-        {{ $dataEmployees->links() }}
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -66,7 +70,7 @@
             </thead>
             <tbody>
                 @foreach ($dataEmployees as $key => $value)
-
+                
                 <tr>
                     <td>
                         {{ $dataEmployees->firstItem() + $key }}
@@ -81,8 +85,8 @@
                         {{ $value->alamat }}
                     </td>
                     <td>
-                        <a href="" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="" class="btn btn-danger btn-sm">Del</a>
+                        <a wire:click="edit({{ $value->id }})" class="btn btn-warning btn-sm">Edit</a>
+                        <a wire:click="delete({{ $value->id }})" class="btn btn-danger btn-sm">Del</a>
                     </td>
                 </tr>
                 @endforeach
